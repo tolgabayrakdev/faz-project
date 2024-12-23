@@ -20,8 +20,8 @@ class AuthService:
         if not self.helper.verify_password(password, user.password):
             raise HTTPException(status_code=401, detail="Invalid credentials")
 
-        access_token = Helper.generate_access_token({"user_id": user.id})
-        refresh_token = Helper.generate_refresh_token({"user_id": user.id})
+        access_token = self.helper.generate_access_token({"user_id": user.id})
+        refresh_token = self.helper.generate_refresh_token({"user_id": user.id})
 
         return {"access_token": access_token, "refresh_token": refresh_token}
 
@@ -29,9 +29,11 @@ class AuthService:
         user = self.user_repository.get_user_by_email(data["email"])
         if user:
             raise HTTPException(status_code=400, detail="User already exists")
-
         hashed_password = self.helper.generate_hash_password(data["password"])
-        user = User(**data, password=hashed_password)
+        user = User(
+            username=data["username"],
+            email=data["email"],
+            password=hashed_password,)
         try:
             self.user_repository.create_user(user)
             return {"message": "User created successfully"}
