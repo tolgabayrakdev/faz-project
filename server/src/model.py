@@ -16,8 +16,6 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(50), unique=True)
     password: Mapped[str] = mapped_column(String)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    bio: Mapped[str] = mapped_column(String, nullable=True)
-    address: Mapped[str] = mapped_column(String, nullable=True)
     role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), default=1)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now())

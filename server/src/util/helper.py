@@ -11,17 +11,14 @@ class Helper:
 
     @classmethod
     def generate_hash_password(cls, password: str) -> str:
-        """Parolayı hash'ler."""
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     @classmethod
     def verify_password(cls, plain_password: str, hashed_password: str) -> bool:
-        """Parolanın doğruluğunu kontrol eder."""
         return cls.generate_hash_password(plain_password) == hashed_password
 
     @classmethod
     def generate_access_token(cls, data: Dict[str, Union[str, int]]) -> str:
-        """Access token oluşturur."""
         to_encode = data.copy()
         expire = datetime.now() + timedelta(minutes=cls.ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode.update({"exp": int(expire.timestamp())})
@@ -31,7 +28,6 @@ class Helper:
 
     @classmethod
     def generate_refresh_token(cls, data: Dict[str, Union[str, int]]) -> str:
-        """Refresh token oluşturur."""
         to_encode = data.copy()
         expire = datetime.now() + timedelta(days=cls.REFRESH_TOKEN_EXPIRE_DAYS)
         to_encode.update({"exp": int(expire.timestamp())})
@@ -41,7 +37,6 @@ class Helper:
 
     @classmethod
     def decode_token(cls, token: str) -> Dict:
-        """Token'ı decode eder."""
         try:
             decoded_token = jwt.decode(token, cls.JWT_SECRET_KEY, algorithms=["HS256"])
             return decoded_token
